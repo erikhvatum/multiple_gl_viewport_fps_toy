@@ -44,6 +44,6 @@ QString FPSCounter::qstring_query_update()
     if(std::isnan(mean))
         ret = QString("need %1 more samples").arg(2 - m_samples.size());
     else
-        ret = QString(u8"FPS: mean=%1 σ=%2 n=%3").arg(mean, 8, 'f').arg(stddev, 8, 'f').arg(m_samples.size()-1);
+        ret = QString("FPS: mean=%1 stddev=%2 n=%3").arg(mean, 8, 'f').arg(stddev, 8, 'f').arg(m_samples.size()-1);
     return ret;
 }
