@@ -13,7 +13,7 @@ public:
     QString qstring_query_update();
 
 protected:
-    typedef std::chrono::time_point<std::chrono::system_clock> Sample;
+    typedef std::chrono::time_point<std::chrono::high_resolution_clock> Sample;
     typedef std::list<Sample> Samples;
 
     Samples m_samples;
