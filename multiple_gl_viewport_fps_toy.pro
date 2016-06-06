@@ -17,10 +17,13 @@ SOURCES += main.cpp\
     GL_QGraphicsView.cpp \
     FPSCounter.cpp \
     logo.cpp \
-    glwidget.cpp
+    LogoGLWidget.cpp
 
 HEADERS  += MainWindow.h \
     GL_QGraphicsView.h \
     FPSCounter.h \
     logo.h \
-    glwidget.h
+    LogoGLWidget.h
+
+DISTFILES += \
+    README.md

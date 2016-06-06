@@ -8,7 +8,7 @@ class GL_QGraphicsView
 {
     Q_OBJECT
 public:
-    GL_QGraphicsView(QGraphicsScene* scene);
+    GL_QGraphicsView(int swap_interval, QGraphicsScene* scene);
     ~GL_QGraphicsView();
 
 protected:

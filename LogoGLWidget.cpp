@@ -48,41 +48,35 @@
 **
 ****************************************************************************/
 
-#include "glwidget.h"
+#include "LogoGLWidget.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <math.h>
 
-GLWidget::GLWidget(QWidget *parent)
+LogoGLWidget::LogoGLWidget(int swap_interval, QWidget *parent)
     : QOpenGLWidget(parent),
       m_xRot(0),
       m_yRot(0),
       m_zRot(0),
       m_program(0)
 {
-    m_core = QCoreApplication::arguments().contains(QStringLiteral("--coreprofile"));
-    // --transparent causes the clear color to be transparent. Therefore, on systems that
-    // support it, the widget will become transparent apart from the logo.
-    m_transparent = QCoreApplication::arguments().contains(QStringLiteral("--transparent"));
-    if (m_transparent) {
-        QSurfaceFormat fmt = format();
-        fmt.setAlphaBufferSize(8);
-        setFormat(fmt);
-    }
+    QSurfaceFormat fmt = format();
+    fmt.setSwapInterval(swap_interval);
+    setFormat(fmt);
 }
 
-GLWidget::~GLWidget()
+LogoGLWidget::~LogoGLWidget()
 {
     cleanup();
 }
 
-QSize GLWidget::minimumSizeHint() const
+QSize LogoGLWidget::minimumSizeHint() const
 {
     return QSize(50, 50);
 }
 
-QSize GLWidget::sizeHint() const
+QSize LogoGLWidget::sizeHint() const
 {
     return QSize(400, 400);
 }
@@ -95,7 +89,7 @@ static void qNormalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void GLWidget::setXRotation(int angle)
+void LogoGLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != m_xRot) {
@@ -105,7 +99,7 @@ void GLWidget::setXRotation(int angle)
     }
 }
 
-void GLWidget::setYRotation(int angle)
+void LogoGLWidget::setYRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != m_yRot) {
@@ -115,7 +109,7 @@ void GLWidget::setYRotation(int angle)
     }
 }
 
-void GLWidget::setZRotation(int angle)
+void LogoGLWidget::setZRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != m_zRot) {
@@ -125,7 +119,7 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
-void GLWidget::cleanup()
+void LogoGLWidget::cleanup()
 {
     makeCurrent();
     m_logoVbo.destroy();
@@ -189,7 +183,7 @@ static const char *fragmentShaderSource =
     "   gl_FragColor = vec4(col, 1.0);\n"
     "}\n";
 
-void GLWidget::initializeGL()
+void LogoGLWidget::initializeGL()
 {
     // In this example the widget's corresponding top-level window can change
     // several times during the widget's lifetime. Whenever this happens, the
@@ -198,7 +192,7 @@ void GLWidget::initializeGL()
     // aboutToBeDestroyed() signal, instead of the destructor. The emission of
     // the signal will be followed by an invocation of initializeGL() where we
     // can recreate all resources.
-    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &GLWidget::cleanup);
+    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &LogoGLWidget::cleanup);
 
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
@@ -241,7 +235,7 @@ void GLWidget::initializeGL()
     m_program->release();
 }
 
-void GLWidget::setupVertexAttribs()
+void LogoGLWidget::setupVertexAttribs()
 {
     m_logoVbo.bind();
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
@@ -252,7 +246,7 @@ void GLWidget::setupVertexAttribs()
     m_logoVbo.release();
 }
 
-void GLWidget::paintGL()
+void LogoGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -275,18 +269,18 @@ void GLWidget::paintGL()
     m_program->release();
 }
 
-void GLWidget::resizeGL(int w, int h)
+void LogoGLWidget::resizeGL(int w, int h)
 {
     m_proj.setToIdentity();
     m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
 }
 
-void GLWidget::mousePressEvent(QMouseEvent *event)
+void LogoGLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->pos();
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent *event)
+void LogoGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
