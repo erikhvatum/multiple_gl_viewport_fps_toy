@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_central_fps_item(m_central_gs->addText("")),
     m_central_gv(new GL_QGraphicsView(0, m_central_gs)),
     m_central_swap_interval("central swapInterval == 0"),
-    m_left_widget(new QWidget()),
+    m_left_widget(new QOpenGLWidget()),
     m_left_dock_widget(new QDockWidget("left widget")),
     m_right_gs(new QGraphicsScene()),
     m_right_fps_item(m_right_gs->addText("")),
