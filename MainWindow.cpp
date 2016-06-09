@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_central_fps_item(m_central_gs->addText("")),
     m_central_gv(new GL_QGraphicsView(0, m_central_gs)),
     m_central_swap_interval("central swapInterval == 0"),
+    m_left_widget(new QWidget()),
+    m_left_dock_widget(new QDockWidget("left widget")),
     m_right_gs(new QGraphicsScene()),
     m_right_fps_item(m_right_gs->addText("")),
     m_right_gv(new GL_QGraphicsView(0, m_right_gs)),
@@ -25,6 +27,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_central_swap_interval.setCheckable(true);
     m_central_swap_interval.setChecked(true);
     connect(&m_central_swap_interval, &QAction::toggled, this, &MainWindow::on_central_swap_interval_toggled);
+
+    m_left_fps_label = new QLabel();
+    m_left_widget->setLayout(new QVBoxLayout());
+    m_left_widget->layout()->addWidget(m_left_fps_label);
+    m_left_dock_widget->setWidget(m_left_widget);
+    m_left_dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
+    addDockWidget(Qt::LeftDockWidgetArea, m_left_dock_widget);
 
     m_right_dock_widget->setWidget(m_right_gv);
     m_right_dock_widget->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -46,9 +55,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_bottom_swap_interval.setChecked(true);
     connect(&m_bottom_swap_interval, &QAction::toggled, this, &MainWindow::on_bottom_swap_interval_toggled);
 
-    m_toolbar = addToolBar("");
+    m_toolbar = new QToolBar();
+    addToolBar(Qt::LeftToolBarArea, m_toolbar);
     m_toolbar->addAction(&m_central_swap_interval);
     m_toolbar->addAction(m_right_dock_widget->toggleViewAction());
+    m_toolbar->addAction(m_left_dock_widget->toggleViewAction());
     m_toolbar->addAction(&m_right_swap_interval);
     m_toolbar->addAction(m_bottom_dock_widget->toggleViewAction());
     m_toolbar->addAction(&m_bottom_swap_interval);
@@ -77,6 +88,8 @@ MainWindow::~MainWindow()
 {
     delete m_central_gv;
     delete m_central_gs;
+    delete m_left_widget;
+    delete m_left_dock_widget;
     delete m_right_gv;
     delete m_right_gs;
     delete m_right_dock_widget;
@@ -90,6 +103,7 @@ void MainWindow::on_refresh_timer_timeout()
 {
     QString s{m_fps_counter.qstring_query_update()};
     m_central_fps_item->setPlainText(s);
+    m_left_fps_label->setText(s);
     m_right_fps_item->setPlainText(s);
     m_bottom_fps_item->setPlainText(s);
 }

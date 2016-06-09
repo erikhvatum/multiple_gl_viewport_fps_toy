@@ -23,6 +23,9 @@ protected:
     QGraphicsTextItem* m_central_fps_item;
     GL_QGraphicsView* m_central_gv;
     QAction m_central_swap_interval;
+    QWidget *m_left_widget;
+    QLabel *m_left_fps_label;
+    QDockWidget* m_left_dock_widget;
     QGraphicsScene* m_right_gs;
     QGraphicsTextItem* m_right_fps_item;
     GL_QGraphicsView* m_right_gv;
